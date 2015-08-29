@@ -1,0 +1,41 @@
+building libzen
+
+#doenload url
+not http://sourceforge.net/projects/libzenstone/?source=typ_redirect
+http://sourceforge.net/projects/zenlib/?source=typ_redirect
+
+# libtool version mismatch error
+autoreconf --force --install
+http://stackoverflow.com/questions/3096989/libtool-version-mismatch-error
+
+#i386
+export CC="gcc"
+export CXX="g++"
+export CFLAGS="-arch i386"
+export CXXFLAGS="-arch i386"
+export CFLAGS="-arch i386 -isysroot /Xcode3/SDKs/MacOSX10.6.sdk -mmacosx-version-min=10.6"
+export LDFLAGS="-arch i386 -isysroot /Xcode3/SDKs/MacOSX10.6.sdk -mmacosx-version-min=10.6 -L/usr/local/lib"
+export CPPFLAGS="-arch i386 -isysroot /Xcode3/SDKs/MacOSX10.6.sdk -mmacosx-version-min=10.6"
+
+./configure --prefix=/Users/miyako/Desktop/32 --enable-arch-i386 --enable-shared --disable-static
+
+#x86_64
+export CCFLAGS="-arch x86_64 -I/usr/local/include"
+export CXXFLAGS="-arch x86_64 -I/usr/local/include"
+export CFLAGS="-arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -mmacosx-version-min=10.8"
+export LDFLAGS="-arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -mmacosx-version-min=10.8 -L/usr/local/lib"
+export CPPFLAGS="-arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -mmacosx-version-min=10.8 -I/usr/local/include"
+
+./configure --prefix=/Users/miyako/Desktop/64 --enable-arch-x86_64 --enable-shared --disable-static
+
+building libmediainfo
+
+#forward declaration of class cannot have a nested name specifier
+#../../../Source/MediaInfo/Text/File_Ttml.h:23:7: 
+
+//class tinyxml2::XMLDocument;
+//class tinyxml2::XMLElement;
+namespace tinyxml2 {class XMLDocument;class XMLElement;};
+
+
+
