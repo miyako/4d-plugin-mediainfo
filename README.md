@@ -14,7 +14,7 @@ info:=MediaInfo (data;type)
 
 Parameter|Type|Description
 ------------|------------|----
-data|BLOB|classic `C_BLOB`, not 4D.Blob object
+data|BLOB|classic `C_BLOB`, not `4D.Blob` object
 type|LONGINT|``MediaInfo Inform XML``, ``MediaInfo Inform CSV``, ``MediaInfo Inform HTML``, `MediaInfo Inform JSON`
 info|TEXT|
 
