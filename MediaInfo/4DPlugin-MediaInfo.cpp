@@ -47,7 +47,8 @@ void MediaInfo(PA_PluginParameters params) {
     Param1.fromParamAtIndex(pParams, 1);
     Param2.fromParamAtIndex(pParams, 2);
 
-    if(Param1.getBytesLength()){
+    if(Param1.getBytesLength() != 0){
+
         MediaInfoLib::MediaInfo MI;
         MI.Open_Buffer_Init();
         

@@ -27,6 +27,10 @@
 #define MediaInfo_Inform_XML (3)
 #define MediaInfo_Inform_JSON (4)
 
+#if VERSIONWIN
+#include <time.h>
+#endif
+
 #pragma mark -
 
 void MediaInfo(PA_PluginParameters params);
