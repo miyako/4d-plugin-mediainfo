@@ -1,7 +1,7 @@
 ![version](https://img.shields.io/badge/version-17%2B-3E8B93)
 ![platform](https://img.shields.io/static/v1?label=platform&message=mac-intel%20|%20mac-arm%20|%20win-64&color=blue)
 [![license](https://img.shields.io/github/license/miyako/4d-plugin-mediainfo )](LICENSE)
-![downloads](https://img.shields.io/github/downloads/miyako/4d-plugin-mediainfo /total)
+![downloads](https://img.shields.io/github/downloads/miyako/4d-plugin-mediainfo/total)
 
 4d-plugin-mediainfo
 ===================
@@ -27,16 +27,6 @@ info:=MediaInfo (data;type)
 Parameter|Type|Description
 ------------|------------|----
 data|BLOB|
-type|LONGINT|``MediaInfo Inform XML``, ``MediaInfo Inform CSV``, ``MediaInfo Inform HTML``
-info|TEXT|
-
-```4d
-info:=MediaInfoFile (path;type)
-```
-
-Parameter|Type|Description
-------------|------------|----
-path|TEXT|
 type|LONGINT|``MediaInfo Inform XML``, ``MediaInfo Inform CSV``, ``MediaInfo Inform HTML``
 info|TEXT|
 
