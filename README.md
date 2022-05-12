@@ -6,7 +6,7 @@
 4d-plugin-mediainfo
 ===================
 
-4D implementation of the [MediaInfo](https://mediaarea.net/ja/MediaInfo) program.
+4D implementation of the [MediaInfo](https://mediaarea.net/ja/MediaInfo) program. (`22.03`)
 
 ```4d
 info:=MediaInfo (data;type)
@@ -14,7 +14,7 @@ info:=MediaInfo (data;type)
 
 Parameter|Type|Description
 ------------|------------|----
-data|BLOB|
+data|BLOB|classic `C_BLOB`, not `4D.Blob` object
 type|LONGINT|``MediaInfo Inform XML``, ``MediaInfo Inform CSV``, ``MediaInfo Inform HTML``, `MediaInfo Inform JSON`
 info|TEXT|
 
