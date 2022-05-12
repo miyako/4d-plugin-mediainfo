@@ -21,8 +21,10 @@
 
 //---------------------------------------------------------------------------
 #include "MediaInfo/MediaInfo_Internal_Const.h"
+#include "MediaInfo/HashWrapper.h" //For MEDIAINFO_HASH
 #if MEDIAINFO_EVENTS
     #include "MediaInfo/MediaInfo_Config.h"
+    #include "MediaInfo/MediaInfo_Config_PerPackage.h"
     #include "MediaInfo/MediaInfo_Events.h"
     #include "ZenLib/File.h"
 #endif //MEDIAINFO_EVENTS
@@ -30,6 +32,7 @@
 #include "ZenLib/Translation.h"
 #include "ZenLib/InfoMap.h"
 using namespace ZenLib;
+using std::string;
 //---------------------------------------------------------------------------
 
 namespace MediaInfoLib
@@ -38,6 +41,29 @@ namespace MediaInfoLib
 #if MEDIAINFO_EVENTS
     class File__Analyze;
 #endif //MEDIAINFO_EVENTS
+
+#if MEDIAINFO_AES
+enum encryption_format
+{
+    Encryption_Format_None,
+    Encryption_Format_Aes,
+};
+enum encryption_method
+{
+     Encryption_Method_None,
+     Encryption_Method_Segment,
+};
+enum encryption_mode
+{
+     Encryption_Mode_None,
+     Encryption_Mode_Cbc,
+};
+enum encryption_padding
+{
+     Encryption_Padding_None,
+     Encryption_Padding_Pkcs7,
+};
+#endif //MEDIAINFO_AES
 
 //***************************************************************************
 // Class MediaInfo_Config_MediaInfo
@@ -49,7 +75,9 @@ public :
     //Constructor/Destructor
     MediaInfo_Config_MediaInfo();
     ~MediaInfo_Config_MediaInfo();
-    
+
+    bool          RequestTerminate;
+
     //General
     Ztring Option (const String &Option, const String &Value=Ztring());
 
@@ -59,6 +87,9 @@ public :
     void          File_IsSub_Set (bool NewValue);
     bool          File_IsSub_Get ();
 
+    void          File_ParseSpeed_Set(float32 NewValue, bool FromGlobal=false);
+    float32       File_ParseSpeed_Get();
+
     void          File_IsDetectingDuration_Set (bool NewValue);
     bool          File_IsDetectingDuration_Get ();
 
@@ -67,6 +98,9 @@ public :
 
     void          File_TestContinuousFileNames_Set (bool NewValue);
     bool          File_TestContinuousFileNames_Get ();
+
+    void          File_TestDirectory_Set (bool NewValue);
+    bool          File_TestDirectory_Get ();
 
     void          File_KeepInfo_Set (bool NewValue);
     bool          File_KeepInfo_Get ();
@@ -86,14 +120,32 @@ public :
     void          File_ID_OnlyRoot_Set (bool NewValue);
     bool          File_ID_OnlyRoot_Get ();
 
+    void          File_ExpandSubs_Set(bool NewValue);
+    bool          File_ExpandSubs_Get();
+    void          File_ExpandSubs_Update(void** Source);
+
     #if MEDIAINFO_ADVANCED
         void          File_IgnoreSequenceFileSize_Set (bool NewValue);
         bool          File_IgnoreSequenceFileSize_Get ();
     #endif //MEDIAINFO_ADVANCED
 
     #if MEDIAINFO_ADVANCED
+        void          File_IgnoreSequenceFilesCount_Set (bool NewValue);
+        bool          File_IgnoreSequenceFilesCount_Get ();
+    #endif //MEDIAINFO_ADVANCED
+
+    #if MEDIAINFO_ADVANCED
+        void          File_SequenceFilesSkipFrames_Set (int64u NewValue);
+        int64u        File_SequenceFilesSkipFrames_Get ();
+    #endif //MEDIAINFO_ADVANCED
+
+    #if MEDIAINFO_ADVANCED
         void          File_DefaultFrameRate_Set (float64 NewValue);
         float64       File_DefaultFrameRate_Get ();
+        void          File_DefaultTimeCode_Set (string NewValue);
+        string        File_DefaultTimeCode_Get ();
+        Ztring        File_DefaultTimeCodeDropFrame_Set (const String& NewValue);
+        int8u         File_DefaultTimeCodeDropFrame_Get ();
     #endif //MEDIAINFO_ADVANCED
 
     #if MEDIAINFO_ADVANCED
@@ -104,7 +156,13 @@ public :
     #if MEDIAINFO_ADVANCED
         void          File_RiskyBitRateEstimation_Set (bool NewValue);
         bool          File_RiskyBitRateEstimation_Get ();
-    #endif //MEDIAINFO_ADVANCED
+        void          File_MergeBitRateInfo_Set (bool NewValue);
+        bool          File_MergeBitRateInfo_Get ();
+        void          File_HighestFormat_Set (bool NewValue);
+        bool          File_HighestFormat_Get ();
+        void          File_ChannelLayout_Set(bool NewValue);
+        bool          File_ChannelLayout_Get();
+#endif //MEDIAINFO_ADVANCED
 
     #if MEDIAINFO_DEMUX
         #if MEDIAINFO_ADVANCED
@@ -113,6 +171,10 @@ public :
         #endif //MEDIAINFO_ADVANCED
     #endif //MEDIAINFO_DEMUX
 
+    #if MEDIAINFO_HASH
+        void         File_Hash_Set (HashWrapper::HashFunctions Funtions);
+        HashWrapper::HashFunctions File_Hash_Get ();
+    #endif //MEDIAINFO_HASH
     #if MEDIAINFO_MD5
         void          File_Md5_Set (bool NewValue);
         bool          File_Md5_Get ();
@@ -139,9 +201,38 @@ public :
 
     void          File_ForceParser_Set (const Ztring &NewValue);
     Ztring        File_ForceParser_Get ();
+    void          File_ForceParser_Config_Set (const Ztring &NewValue);
+    Ztring        File_ForceParser_Config_Get ();
 
     void          File_Buffer_Size_Hint_Pointer_Set (size_t* NewValue);
     size_t*       File_Buffer_Size_Hint_Pointer_Get ();
+
+    void          File_Buffer_Read_Size_Set (size_t NewValue);
+    size_t        File_Buffer_Read_Size_Get ();
+
+    #if MEDIAINFO_AES
+    void          Encryption_Format_Set (const Ztring &Value);
+    void          Encryption_Format_Set (encryption_format Value);
+    string        Encryption_Format_GetS ();
+    encryption_format Encryption_Format_Get ();
+    void          Encryption_Key_Set (const Ztring &Value);
+    void          Encryption_Key_Set (const int8u* Value, size_t Value_Size);
+    string        Encryption_Key_Get ();
+    void          Encryption_Method_Set (const Ztring &Value);
+    void          Encryption_Method_Set (encryption_method Value);
+    string        Encryption_Method_GetS ();
+    encryption_method Encryption_Method_Get ();
+    void          Encryption_Mode_Set (const Ztring &Value);
+    void          Encryption_Mode_Set (encryption_mode Value);
+    string        Encryption_Mode_GetS ();
+    encryption_mode Encryption_Mode_Get ();
+    void          Encryption_Padding_Set (const Ztring &Value);
+    void          Encryption_Padding_Set (encryption_padding Value);
+    string        Encryption_Padding_GetS ();
+    encryption_padding  Encryption_Padding_Get ();
+    void          Encryption_InitializationVector_Set (const Ztring &Value);
+    string        Encryption_InitializationVector_Get ();
+    #endif //MEDIAINFO_AES
 
     #if MEDIAINFO_NEXTPACKET
     void          NextPacket_Set (bool NewValue);
@@ -188,6 +279,8 @@ public :
     void          Event_Send(File__Analyze* Source, const int8u* Data_Content, size_t Data_Size, const Ztring &File_Name=Ztring());
     void          Event_Accepted(File__Analyze* Source);
     void          Event_SubFile_Start(const Ztring &FileName_Absolute);
+    void          Event_SubFile_Missing(const Ztring &FileName_Relative);
+    void          Event_SubFile_Missing_Absolute(const Ztring &FileName_Absolute);
     #endif //MEDIAINFO_EVENTS
 
     #if MEDIAINFO_DEMUX
@@ -199,6 +292,8 @@ public :
     bool          Demux_PCM_20bitTo24bit_Get ();
     void          Demux_Avc_Transcode_Iso14496_15_to_Iso14496_10_Set (bool NewValue);
     bool          Demux_Avc_Transcode_Iso14496_15_to_Iso14496_10_Get ();
+    void          Demux_Hevc_Transcode_Iso14496_15_to_AnnexB_Set (bool NewValue);
+    bool          Demux_Hevc_Transcode_Iso14496_15_to_AnnexB_Get ();
     void          Demux_Unpacketize_Set (bool NewValue);
     bool          Demux_Unpacketize_Get ();
     void          Demux_Rate_Set (float64 NewValue);
@@ -209,16 +304,25 @@ public :
     int64u        Demux_FirstFrameNumber_Get ();
     void          Demux_InitData_Set (int8u NewValue);
     int8u         Demux_InitData_Get ();
+    void          Demux_SplitAudioBlocks_Set(bool NewValue);
+    bool          Demux_SplitAudioBlocks_Get();
+    std::map<Ztring, File> Demux_Files;
     #endif //MEDIAINFO_DEMUX
 
-    #if MEDIAINFO_IBI
+    #if MEDIAINFO_IBIUSAGE
     void          Ibi_Set (const Ztring &NewValue);
     std::string   Ibi_Get ();
-    void          Ibi_Create_Set (bool NewValue);
-    bool          Ibi_Create_Get ();
     void          Ibi_UseIbiInfoIfAvailable_Set (bool NewValue);
     bool          Ibi_UseIbiInfoIfAvailable_Get ();
-    #endif //MEDIAINFO_IBI
+    #endif //MEDIAINFO_IBIUSAGE
+    #if MEDIAINFO_IBIUSAGE
+    void          Ibi_Create_Set (bool NewValue);
+    bool          Ibi_Create_Get ();
+    #endif //MEDIAINFO_IBIUSAGE
+    #if MEDIAINFO_FIXITY
+    void          TryToFix_Set (bool NewValue);
+    bool          TryToFix_Get ();
+    #endif //MEDIAINFO_FIXITY
 
     //Specific
     void          File_MpegTs_ForceMenu_Set (bool NewValue);
@@ -229,6 +333,10 @@ public :
     bool          File_MpegTs_Atsc_transport_stream_id_Trust_Get ();
     void          File_MpegTs_RealTime_Set (bool NewValue);
     bool          File_MpegTs_RealTime_Get ();
+    void          File_Mxf_TimeCodeFromMaterialPackage_Set (bool NewValue);
+    bool          File_Mxf_TimeCodeFromMaterialPackage_Get ();
+    void          File_Mxf_ParseIndex_Set (bool NewValue);
+    bool          File_Mxf_ParseIndex_Get ();
     void          File_Bdmv_ParseTargetedFile_Set (bool NewValue);
     bool          File_Bdmv_ParseTargetedFile_Get ();
     #if defined(MEDIAINFO_DVDIF_YES)
@@ -247,6 +355,8 @@ public :
     #endif //MEDIAINFO_MACROBLOCKS
     void          File_GrowingFile_Delay_Set(float64 Value);
     float64       File_GrowingFile_Delay_Get();
+    void          File_GrowingFile_Force_Set(bool Value);
+    bool          File_GrowingFile_Force_Get();
     #if defined(MEDIAINFO_LIBCURL_YES)
     void          File_Curl_Set (const Ztring &NewValue);
     void          File_Curl_Set (const Ztring &Field, const Ztring &NewValue);
@@ -281,11 +391,29 @@ public :
     bool          File_Buffer_Repeat_IsSupported;
     bool          File_IsGrowing;
     bool          File_IsNotGrowingAnymore;
+    bool          File_IsImageSequence;
+    #if defined(MEDIAINFO_EIA608_YES)
+    bool          File_Scte20_IsPresent;
+    #endif //defined(MEDIAINFO_EIA608_YES)
+    #if defined(MEDIAINFO_EIA608_YES) || defined(MEDIAINFO_EIA708_YES)
+    bool          File_DtvccTransport_Stream_IsPresent;
+    bool          File_DtvccTransport_Descriptor_IsPresent;
+    #endif //defined(MEDIAINFO_EIA608_YES) || defined(MEDIAINFO_EIA708_YES)
+    #if defined(MEDIAINFO_MPEGPS_YES)
+    bool          File_MpegPs_PTS_Begin_IsNearZero;
+    #endif //defined(MEDIAINFO_MPEGPS_YES)
     int64u        File_Current_Offset;
     int64u        File_Current_Size;
+    int64u        File_IgnoreEditsBefore;
+    int64u        File_IgnoreEditsAfter;
+    float64       File_EditRate;
     int64u        File_Size;
     float32       ParseSpeed;
+    bool          ParseSpeed_FromFile;
+    bool          IsFinishing;
     #if MEDIAINFO_EVENTS
+    MediaInfo_Config_PerPackage* Config_PerPackage;
+    bool          Events_TimestampShift_Disabled;
     Ztring        File_Names_RootDirectory;
     #endif //MEDIAINFO_EVENTS
     #if MEDIAINFO_DEMUX
@@ -298,6 +426,9 @@ public :
         bool      Demux_IsSeeking;
         #endif //MEDIAINFO_SEEK
     #endif //MEDIAINFO_DEMUX
+    #if MEDIAINFO_SEEK
+    bool      File_GoTo_IsFrameOffset;
+    #endif //MEDIAINFO_SEEK
 
 private :
     bool                    FileIsSeekable;
@@ -305,21 +436,34 @@ private :
     bool                    FileIsDetectingDuration;
     bool                    FileIsReferenced;
     bool                    FileTestContinuousFileNames;
+    bool                    FileTestDirectory;
     bool                    FileKeepInfo;
     bool                    FileStopAfterFilled;
     bool                    FileStopSubStreamAfterFilled;
     bool                    Audio_MergeMonoStreams;
     bool                    File_Demux_Interleave;
     bool                    File_ID_OnlyRoot;
+    void*                   File_ExpandSubs_Backup;
+    void*                   File_ExpandSubs_Source;
     #if MEDIAINFO_ADVANCED
         bool                File_IgnoreSequenceFileSize;
+        bool                File_IgnoreSequenceFilesCount;
+        int64u              File_SequenceFilesSkipFrames;
         float64             File_DefaultFrameRate;
+        string              File_DefaultTimeCode;
+        int8u               File_DefaultTimeCodeDropFrame;
         bool                File_Source_List;
         bool                File_RiskyBitRateEstimation;
+        bool                File_MergeBitRateInfo;
+        bool                File_HighestFormat;
+        bool                File_ChannelLayout;
         #if MEDIAINFO_DEMUX
             bool                File_Demux_Unpacketize_StreamLayoutChange_Skip;
         #endif //MEDIAINFO_DEMUX
     #endif //MEDIAINFO_ADVANCED
+    #if MEDIAINFO_HASH
+        HashWrapper::HashFunctions Hash_Functions;
+    #endif //MEDIAINFO_HASH
     #if MEDIAINFO_MD5
         bool                File_Md5;
     #endif //MEDIAINFO_MD5
@@ -332,9 +476,20 @@ private :
     Ztring                  File_Partial_Begin;
     Ztring                  File_Partial_End;
     Ztring                  File_ForceParser;
+    Ztring                  File_ForceParser_Config;
     size_t*                 File_Buffer_Size_Hint_Pointer;
+    size_t                  File_Buffer_Read_Size;
 
     //Extra
+    #if MEDIAINFO_AES
+    encryption_format       Encryption_Format;
+    string                  Encryption_Key;
+    encryption_method       Encryption_Method;
+    encryption_mode         Encryption_Mode;
+    encryption_padding      Encryption_Padding;
+    string                  Encryption_InitializationVector;
+    #endif //MEDIAINFO_AES
+
     #if MEDIAINFO_NEXTPACKET
     bool                    NextPacket;
     #endif //MEDIAINFO_NEXTPACKET
@@ -379,6 +534,9 @@ private :
     int64u                  SubFile_StreamID;
     bool                    ParseUndecodableFrames;
     Ztring                  SubFile_IDs;
+    int64u                      Events_TimestampShift_Reference_PTS;
+    int64u                      Events_TimestampShift_Reference_ID;
+    std::vector<event_delayed*> Events_TimestampShift_Delayed;
     #endif //MEDIAINFO_EVENTS
 
     #if MEDIAINFO_DEMUX
@@ -386,36 +544,46 @@ private :
     bool                    Demux_PCM_20bitTo16bit;
     bool                    Demux_PCM_20bitTo24bit;
     bool                    Demux_Avc_Transcode_Iso14496_15_to_Iso14496_10;
+    bool                    Demux_Hevc_Transcode_Iso14496_15_to_AnnexB;
     bool                    Demux_Unpacketize;
+    bool                    Demux_SplitAudioBlocks;
     float64                 Demux_Rate;
     int64u                  Demux_FirstDts;
     int64u                  Demux_FirstFrameNumber;
     int8u                   Demux_InitData;
     #endif //MEDIAINFO_DEMUX
 
-    #if MEDIAINFO_IBI
+    #if MEDIAINFO_IBIUSAGE
     std::string             Ibi;
-    bool                    Ibi_Create;
     bool                    Ibi_UseIbiInfoIfAvailable;
-    #endif //MEDIAINFO_IBI
+    #endif //MEDIAINFO_IBIUSAGE
+    #if MEDIAINFO_IBIUSAGE
+    bool                    Ibi_Create;
+    #endif //MEDIAINFO_IBIUSAGE
+    #if MEDIAINFO_FIXITY
+    bool                    TryToFix;
+    #endif //MEDIAINFO_SEEK
 
     //Specific
     bool                    File_MpegTs_ForceMenu;
     bool                    File_MpegTs_stream_type_Trust;
     bool                    File_MpegTs_Atsc_transport_stream_id_Trust;
     bool                    File_MpegTs_RealTime;
+    bool                    File_Mxf_TimeCodeFromMaterialPackage;
+    bool                    File_Mxf_ParseIndex;
     bool                    File_Bdmv_ParseTargetedFile;
     #if defined(MEDIAINFO_DVDIF_YES)
     bool                    File_DvDif_DisableAudioIfIsInContainer;
     bool                    File_DvDif_IgnoreTransmittingFlags;
     #endif //defined(MEDIAINFO_DVDIF_ANALYZE_YES)
-    #if defined(MEDIAINFO_DVDIF_YES)
+    #if defined(MEDIAINFO_DVDIF_ANALYZE_YES)
     bool                    File_DvDif_Analysis;
     #endif //defined(MEDIAINFO_DVDIF_ANALYZE_YES)
     #if MEDIAINFO_MACROBLOCKS
     bool                    File_Macroblocks_Parse;
     #endif //MEDIAINFO_MACROBLOCKS
     float64                 File_GrowingFile_Delay;
+    bool                    File_GrowingFile_Force;
     #if defined(MEDIAINFO_LIBMMS_YES)
     bool                    File_Mmsh_Describe_Only;
     #endif //defined(MEDIAINFO_LIBMMS_YES)

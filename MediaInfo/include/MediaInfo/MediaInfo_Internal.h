@@ -62,9 +62,13 @@ public :
     size_t Open (const ZenLib::int8u* Begin, size_t Begin_Size, const ZenLib::int8u* End=NULL, size_t End_Size=0, ZenLib::int64u File_Size=0);
     size_t Open_Buffer_Init (ZenLib::int64u File_Size=(ZenLib::int64u)-1, const String &File_Name=String());
     size_t Open_Buffer_Init (ZenLib::int64u File_Size, ZenLib::int64u File_Offset);
+    #if MEDIAINFO_ADVANCED2
+    size_t Open_Buffer_SegmentChange ();
+    #endif //MEDIAINFO_ADVANCED2
     std::bitset<32> Open_Buffer_Continue (const ZenLib::int8u* Buffer, size_t Buffer_Size);
     ZenLib::int64u Open_Buffer_Continue_GoTo_Get ();
     bool   Open_Buffer_Position_Set(int64u File_Offset);
+    void Open_Buffer_CheckFileModifications();
     #if MEDIAINFO_SEEK
     size_t Open_Buffer_Seek        (size_t Method, int64u Value, int64u ID);
     #endif //MEDIAINFO_SEEK
@@ -75,7 +79,9 @@ public :
 
     //General information
     Ztring  Inform ();
+#if defined(MEDIAINFO_TEXT_YES) || defined(MEDIAINFO_HTML_YES) || defined(MEDIAINFO_XML_YES) || defined(MEDIAINFO_CSV_YES) || defined(MEDIAINFO_CUSTOM_YES)
     Ztring  Inform (stream_t StreamKind, size_t StreamNumber, bool IsDirect); //All about only a specific stream
+#endif
 
     //Get
     Ztring Get (stream_t StreamKind, size_t StreamNumber, size_t Parameter, info_t InfoKind=Info_Text);
@@ -95,16 +101,17 @@ public :
     size_t Count_Get (stream_t StreamKind, size_t StreamNumber=(size_t)-1);
 
     //Position in a MediaInfoList class
-    bool    IsFirst;
-    bool    IsLast;
 
     //Internal
     static bool LibraryIsModified(); //Is the library has been modified? (#defines...)
+    static Ztring Inform (MediaInfo_Internal* Info); // Central place for XML headers
+    static Ztring Inform (std::vector<MediaInfo_Internal*> &Info); // Central place for XML headers
 
 private :
     friend class File_Bdmv;  //Theses classes need access to internal structure for optimization. There is recursivity with theses formats
     friend class File_Cdxa;  //Theses classes need access to internal structure for optimization. There is recursivity with theses formats
     friend class File_Lxf;   //Theses classes need access to internal structure for optimization. There is recursivity with theses formats
+    friend class File_Mk;  //Theses classes need access to internal structure for optimization. There is recursivity with theses formats
     friend class File_Mpeg4; //Theses classes need access to internal structure for optimization. There is recursivity with theses formats
     friend class File_MpegTs;//Theses classes need access to internal structure for optimization. There is recursivity with theses formats
     friend class File_MpegPs;//Theses classes need access to internal structure for optimization. There is recursivity with theses formats
@@ -113,10 +120,13 @@ private :
     friend class File_DcpCpl;//Theses classes need access to internal structure for optimization. There is recursivity with theses formats
     friend class File_DcpPkl;//Theses classes need access to internal structure for optimization. There is recursivity with theses formats
     friend class File__ReferenceFilesHelper; //Theses classes need access to internal structure for optimization. There is recursivity with theses formats
+    friend class resource;//Theses classes need access to internal structure for optimization. There is recursivity with theses formats
+    friend class Reader_File; //For Info member
+    friend class MediaInfoList_Internal; //For Info member
 
     //Parsing handles
     File__Analyze*  Info;
-    Internet__Base* Internet;
+    //Internet__Base* Internet;
     #if !defined(MEDIAINFO_READER_NO)
         Reader__Base*   Reader;
     #endif //defined(MEDIAINFO_READER_NO)
@@ -124,6 +134,10 @@ private :
     //Helpers
     void CreateDummy (const String& Value); //Create dummy Information
     MediaInfo_Internal(const MediaInfo_Internal&); // Copy Constructor
+    MediaInfo_Internal &operator =(const MediaInfo_Internal &);
+
+    static void ConvertRetour(Ztring& Retour);
+    static void ConvertRetourSCX(Ztring& Retour);
 
     //Open Buffer
     bool Info_IsMultipleParsing;
@@ -131,25 +145,37 @@ private :
     //Config
     std::vector<std::vector<ZtringList> > Stream;
     std::vector<std::vector<ZtringListList> > Stream_More;
-    Ztring Details;
+    string Details;
+    #if MEDIAINFO_ADVANCED
+        string Inform_Cache;
+    #endif //MEDIAINFO_ADVANCED
+    Ztring ParserName;
     void Traiter(Ztring &C); //enleve les $if...
 
 public :
     bool SelectFromExtension (const String &Parser); //Select File_* from the parser name
+    #if defined(MEDIAINFO_FILE_YES)
     void TestContinuousFileNames();
+    #endif //defined(MEDIAINFO_FILE_YES)
     #if MEDIAINFO_EVENTS
-        void Event_Prepare (struct MediaInfo_Event_Generic* Event);
+        void Event_Prepare (struct MediaInfo_Event_Generic* Event, int32u Event_Code, size_t Event_Size);
     #endif // MEDIAINFO_EVENTS
-    #if !defined(MEDIAINFO_READER_NO)
+    #if defined(MEDIAINFO_FILE_YES)
         int  ListFormats(const String &File_Name=String());
-    #else //!defined(MEDIAINFO_READER_NO)
+    #else //!defined(MEDIAINFO_FILE_YES)
         int  ListFormats(const String &File_Name=String()) {return 0;}
-    #endif //!defined(MEDIAINFO_READER_NO)
+    #endif //!defined(MEDIAINFO_FILE_YES)
     MediaInfo_Config_MediaInfo Config;
 
-    Ztring Xml_Name_Escape(const Ztring &Name);
-    Ztring Xml_Content_Escape(const Ztring &Content, size_t &Modified);
-    Ztring &Xml_Content_Escape_Modifying(Ztring &Content, size_t &Modified);
+    #if defined(MEDIAINFO_XML_YES)
+    static Ztring Xml_Content_Escape(const Ztring &Content, size_t &Modified);
+    static Ztring &Xml_Content_Escape_Modifying(Ztring &Content, size_t &Modified);
+    #endif //defined(MEDIAINFO_XML_YES)
+
+    #if defined(MEDIAINFO_XML_YES) || defined(MEDIAINFO_JSON_YES)
+    static Ztring Xml_Name_Escape(const Ztring &Name);
+    static Ztring &Content_Encode_Modifying(Ztring &Content, size_t &Modified);
+    #endif //defined(MEDIAINFO_XML_YES) || defined(MEDIAINFO_JSON_YES)
 
 private :
     //Threading

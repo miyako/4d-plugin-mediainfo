@@ -54,8 +54,15 @@
         #define __WINDOWS__ 1
     #endif
 #endif
-#if !defined(ZENLIB_NO_WIN9X_SUPPORT) && (defined(_M_X64) || defined(_M_IA64))
-    #define ZENLIB_NO_WIN9X_SUPPORT
+
+//---------------------------------------------------------------------------
+//Windows UWP
+#if defined(WIN32) || defined(WIN64)
+    #if defined(WINAPI_FAMILY) && (WINAPI_FAMILY==WINAPI_FAMILY_APP)
+        #ifndef WINDOWS_UWP
+            #define WINDOWS_UWP
+        #endif
+    #endif
 #endif
 
 //---------------------------------------------------------------------------
@@ -181,7 +188,11 @@
 
 //---------------------------------------------------------------------------
 //(-1) is known to be the MAX of an unsigned int but GCC complains about it
-#include <new>
+#ifdef __cplusplus
+    #include <new> //for size_t
+#else /* __cplusplus */
+    #include <stddef.h> //for size_t
+#endif /* __cplusplus */
 #include <cstring> //size_t
 namespace ZenLib
 {
@@ -339,8 +350,8 @@ typedef unsigned int            intu;
     #define snwprintf swprintf
 #endif
 
-//Windows - MSVC
-#if defined (_MSC_VER)
+//Windows - MSVC (before Visual Studio 2015)
+#if defined (_MSC_VER) && _MSC_VER < 1900
     #define snprintf _snprintf
     #define snwprintf _snwprintf
 #endif

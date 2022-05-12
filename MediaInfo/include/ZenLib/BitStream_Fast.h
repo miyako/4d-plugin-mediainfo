@@ -36,14 +36,14 @@ public:
     BitStream_Fast (const int8u* Buffer_, size_t Size_)                         {Buffer=Buffer_;
                                                                                  Buffer_Size=Buffer_Size_Init=Size_*8; //Size is in bits
                                                                                  BufferUnderRun=false;}
-    ~BitStream_Fast ()                                                          {};
+    ~BitStream_Fast ()                                                          {}
 
     void Attach(const int8u* Buffer_, size_t Size_)
     {
         Buffer=Buffer_;
         Buffer_Size=Buffer_Size_Init=Size_*8; //Size is in bits
         BufferUnderRun=false;
-    };
+    }
 
     bool  GetB ()
     {
@@ -181,18 +181,14 @@ public:
         switch ((NewBits-1)>>3)
         {
             case 3 :    NewBits-=8;
-                        ToReturn|=*Buffer<<NewBits;
-                        Buffer++;
+                        ToReturn|=*(Buffer++)<<NewBits;
             case 2 :    NewBits-=8;
-                        ToReturn|=*Buffer<<NewBits;
-                        Buffer++;
+                        ToReturn|=*(Buffer++)<<NewBits;
             case 1 :    NewBits-=8;
-                        ToReturn|=*Buffer<<NewBits;
-                        Buffer++;
+                        ToReturn|=*(Buffer++)<<NewBits;
             default:    ;
         }
-        LastByte=*Buffer;
-        Buffer++;
+        LastByte=*(Buffer++);
         Buffer_Size-=HowMany;
         ToReturn|=(LastByte>>(Buffer_Size%8))&Mask[NewBits];
         return ToReturn&Mask[HowMany];
@@ -235,7 +231,7 @@ public:
         LastByte=*Buffer;
         Buffer++;
         Buffer_Size-=HowMany;
-    };
+    }
 
     bool   PeekB()
     {
@@ -382,30 +378,30 @@ public:
         return (int64u)Peek4(HowMany); //Not yet implemented
     }
 
-    inline size_t Remain () //How many bits remain?
+    inline size_t Remain () const //How many bits remain?
     {
         return Buffer_Size;
-    };
+    }
 
     inline void Byte_Align()
     {
         Skip (Buffer_Size%8);
-    };
+    }
 
-    inline size_t Offset_Get()
+    inline size_t Offset_Get() const
     {
         return (Buffer_Size_Init-Buffer_Size)/8;
-    };
+    }
 
-    inline size_t BitOffset_Get()
+    inline size_t BitOffset_Get() const
     {
         return Buffer_Size%8;
-    };
+    }
 
-    inline size_t OffsetBeforeLastCall_Get() //No more valid
+    inline size_t OffsetBeforeLastCall_Get()  const //No more valid
     {
         return Buffer_Size%8;
-    };
+    }
 
 private :
     const int8u*    Buffer;

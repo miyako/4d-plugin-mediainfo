@@ -33,11 +33,11 @@ typedef std::basic_string<Char, std::char_traits<Char>, std::allocator<Char> > t
 enum ztring_t
 {
     Ztring_Nothing,
-    Ztring_Rounded              = 1,            ///< if >.5, upper, else lower
-    Ztring_CaseSensitive        = 2,            ///< Case sensitive ("A" and "a" are different)
-    Ztring_AddLastItem          = 4,            ///< if Begin is found and End is not found, return between Begin and end of string
-    Ztring_Recursive            = 8,            ///< Do all strings
-    Ztring_NoZero               =16             ///> Doesn't keep Zero in the float number
+    Ztring_Rounded              =  1,           ///< if >.5, upper, else lower
+    Ztring_CaseSensitive        =  2,           ///< Case sensitive ("A" and "a" are different)
+    Ztring_AddLastItem          =  4,           ///< if Begin is found and End is not found, return between Begin and end of string
+    Ztring_Recursive            =  8,           ///< Do all strings
+    Ztring_NoZero               = 16            ///> Doesn't keep Zero in the float number
 };
 
 //---------------------------------------------------------------------------
@@ -50,15 +50,15 @@ class Ztring : public tstring  //for details about undocumented methods see http
 {
 public :
     //Constructor/destructor
-    Ztring ()                                                                   : tstring(){};
-    Ztring (const tstring& str)                                                 : tstring(str){};
-    Ztring (const tstring& str, size_type pos, size_type n=npos)                : tstring(str, pos, n){};
-    Ztring (const Char* s, size_type n)                                         : tstring(s, n){};
-    Ztring (const Char* s)                                                      : tstring(s){};
-    Ztring (size_type n, Char c)                                                : tstring(n, c){};
+    Ztring ()                                                                   : tstring(){}
+    Ztring (const tstring& str)                                                 : tstring(str){}
+    Ztring (const tstring& str, size_type pos, size_type n=npos)                : tstring(str, pos, n){}
+    Ztring (const Char* s, size_type n)                                         : tstring(s, n){}
+    Ztring (const Char* s)                                                      : tstring(s){}
+    Ztring (size_type n, Char c)                                                : tstring(n, c){}
     #ifdef UNICODE
-    Ztring (const char* S)                                                      : tstring(){From_UTF8(S);};
-    Ztring (const char* S, size_type n)                                         : tstring(){From_UTF8(S, 0, n);};
+    Ztring (const char* S)                                                      : tstring(){From_UTF8(S);}
+    Ztring (const char* S, size_type n)                                         : tstring(){From_UTF8(S, 0, n);}
     #endif //UNICODE
 
     //Operators
@@ -71,89 +71,91 @@ public :
     //Conversions - From
     #ifndef WSTRING_MISSING
         /// @brief convert an Unicode encoded string into Ztring
-    Ztring& From_Unicode (const std::wstring &S)                                {return From_Unicode(S.c_str());};
+    Ztring& From_Unicode (const std::wstring &S)                                {return From_Unicode(S.c_str());}
     #endif //WSTRING_MISSING
+        /// @brief convert an Unicode encoded wchar_t into Ztring
+    Ztring& From_Unicode (const wchar_t S);
         /// @brief convert an Unicode encoded string into Ztring
     Ztring& From_Unicode (const wchar_t *S);
         /// @brief convert an Unicode encoded string into Ztring
     Ztring& From_Unicode (const wchar_t *S, size_type Start, size_type Length);
         /// @brief convert an Unicode encoded string into Ztring
-    Ztring& From_Unicode (const wchar_t *S, size_type Length)                   {return From_Unicode(S, 0, Length);};
+    Ztring& From_Unicode (const wchar_t *S, size_type Length)                   {return From_Unicode(S, 0, Length);}
         /// @brief convert an UTF-8 encoded string into Ztring
-    Ztring& From_UTF8    (const std::string &S)                                 {return From_UTF8(S.c_str());};
+    Ztring& From_UTF8    (const std::string &S)                                 {return From_UTF8(S.c_str());}
         /// @brief convert an UTF-8 encoded string into Ztring
     Ztring& From_UTF8    (const char *S);
         /// @brief convert an UTF-8 encoded string into Ztring
     Ztring& From_UTF8    (const char *S, size_type Start, size_type Length);
         /// @brief convert an UTF-8 encoded string into Ztring
-    Ztring& From_UTF8    (const char *S, size_type Length)                      {return From_UTF8(S, 0, Length);};
+    Ztring& From_UTF8    (const char *S, size_type Length)                      {return From_UTF8(S, 0, Length);}
         /// @brief convert an UTF-16 encoded string into Ztring
     Ztring& From_UTF16   (const char *S);
         /// @brief convert an UTF-16 encoded string into Ztring
     Ztring& From_UTF16   (const char *S, size_type Start, size_type Length);
         /// @brief convert an UTF-16 encoded string into Ztring
-    Ztring& From_UTF16   (const char *S, size_type Length)                      {return From_UTF16(S, 0, Length);};
+    Ztring& From_UTF16   (const char *S, size_type Length)                      {return From_UTF16(S, 0, Length);}
         /// @brief convert an UTF-16BE encoded string into Ztring
     Ztring& From_UTF16BE (const char *S);
         /// @brief convert an UTF-16BE encoded string into Ztring
     Ztring& From_UTF16BE (const char *S, size_type Start, size_type Length);
         /// @brief convert an UTF-16BE encoded string into Ztring
-    Ztring& From_UTF16BE (const char *S, size_type Length)                      {return From_UTF16BE(S, 0, Length);};
+    Ztring& From_UTF16BE (const char *S, size_type Length)                      {return From_UTF16BE(S, 0, Length);}
         /// @brief convert an UTF-16LE encoded string into Ztring
     Ztring& From_UTF16LE (const char *S);
         /// @brief convert an UTF-16LE encoded string into Ztring
     Ztring& From_UTF16LE (const char *S, size_type Start, size_type Length);
         /// @brief convert an UTF-16LE encoded string into Ztring
-    Ztring& From_UTF16LE (const char *S, size_type Length)                      {return From_UTF16LE(S, 0, Length);};
+    Ztring& From_UTF16LE (const char *S, size_type Length)                      {return From_UTF16LE(S, 0, Length);}
         /// @brief convert an Locael encoded string into Ztring
-    Ztring& From_Local   (const std::string &S)                                 {return From_Local(S.c_str());};
+    Ztring& From_Local   (const std::string &S)                                 {return From_Local(S.c_str());}
         /// @brief convert an Local encoded string into Ztring
     Ztring& From_Local   (const char  *S);
         /// @brief convert an Local encoded string into Ztring
     Ztring& From_Local   (const char  *S, size_type Start,  size_type Length);
         /// @brief convert an Local encoded string into Ztring
-    Ztring& From_Local   (const char  *S, size_type Length)                     {return From_Local(S, 0, Length);};
+    Ztring& From_Local   (const char  *S, size_type Length)                     {return From_Local(S, 0, Length);}
 
         /// @brief convert an ISO-8859-1 encoded string into Ztring
     Ztring& From_ISO_8859_1   (const char  *S);
         /// @brief convert an ISO-8859-1 encoded string into Ztring
     Ztring& From_ISO_8859_1   (const char  *S, size_type Start,  size_type Length);
         /// @brief convert an ISO-8859-1 encoded string into Ztring
-    Ztring& From_ISO_8859_1   (const char  *S, size_type Length)                {return From_ISO_8859_1(S, 0, Length);};
+    Ztring& From_ISO_8859_1   (const char  *S, size_type Length)                {return From_ISO_8859_1(S, 0, Length);}
 
         /// @brief convert an ISO-8859-2 encoded string into Ztring
     Ztring& From_ISO_8859_2   (const char  *S);
         /// @brief convert an ISO-8859-1 encoded string into Ztring
     Ztring& From_ISO_8859_2   (const char  *S, size_type Start,  size_type Length);
         /// @brief convert an ISO-8859-1 encoded string into Ztring
-    Ztring& From_ISO_8859_2   (const char  *S, size_type Length)                {return From_ISO_8859_2(S, 0, Length);};
+    Ztring& From_ISO_8859_2   (const char  *S, size_type Length)                {return From_ISO_8859_2(S, 0, Length);}
 
         /// @brief convert an 16 byte GUID into Ztring
     Ztring& From_GUID    (const int128u S);
         /// @brief convert an 16 byte UUID into Ztring
     Ztring& From_UUID    (const int128u S);
         /// @brief convert an 4 Character Code into Ztring
-    Ztring& From_CC4     (const char  *S)                                       {return From_Local(S, 0, 4);};
+    Ztring& From_CC4     (const char  *S)                                       {return From_Local(S, 0, 4);}
         /// @brief convert an 4 Character Code into Ztring
-    Ztring& From_CC4     (const int8u *S)                                       {return From_Local((const char*)S, 0, 4);};
+    Ztring& From_CC4     (const int8u *S)                                       {return From_Local((const char*)S, 0, 4);}
         /// @brief convert an 4 Character Code into Ztring
     Ztring& From_CC4     (const int32u S);
         /// @brief convert an 2 Character Code into Ztring
-    Ztring& From_CC3     (const char  *S)                                       {return From_Local(S, 0, 3);};
+    Ztring& From_CC3     (const char  *S)                                       {return From_Local(S, 0, 3);}
         /// @brief convert an 4 Character Code into Ztring
-    Ztring& From_CC3     (const int8u *S)                                       {return From_Local((const char*)S, 0, 3);};
+    Ztring& From_CC3     (const int8u *S)                                       {return From_Local((const char*)S, 0, 3);}
         /// @brief convert an 4 Character Code into Ztring
     Ztring& From_CC3     (const int32u S);
         /// @brief convert an 2 Character Code into Ztring
-    Ztring& From_CC2     (const char  *S)                                       {return From_CC2(ZenLib::CC2(S));};
+    Ztring& From_CC2     (const char  *S)                                       {return From_CC2(ZenLib::CC2(S));}
         /// @brief convert an 2 Character Code into Ztring
-    Ztring& From_CC2     (const int8u *S)                                       {return From_CC2(ZenLib::CC2(S));};
+    Ztring& From_CC2     (const int8u *S)                                       {return From_CC2(ZenLib::CC2(S));}
         /// @brief convert an 2 Character Code into Ztring
     Ztring& From_CC2     (const int16u S);
         /// @brief convert an 1 Character Code into Ztring
-    Ztring& From_CC1     (const char  *S)                                       {return From_CC1(ZenLib::CC1(S));};
+    Ztring& From_CC1     (const char  *S)                                       {return From_CC1(ZenLib::CC1(S));}
         /// @brief convert an 1 Character Code into Ztring
-    Ztring& From_CC1     (const int8u *S)                                       {return From_CC1(ZenLib::CC1(S));};
+    Ztring& From_CC1     (const int8u *S)                                       {return From_CC1(ZenLib::CC1(S));}
         /// @brief convert an 1 Character Code into Ztring
     Ztring& From_CC1     (const int8u  S);
         /// @brief convert number into Ztring
@@ -194,10 +196,22 @@ public :
     Ztring& Date_From_Milliseconds_1601 (const int64u Milliseconds);
         /// @brief convert count of seconds since 1601 into a readable and sortable string
     Ztring& Date_From_Seconds_1601 (const int64u Seconds);
-        /// @brief convert count of seconds since 1970 into a readable and sortable string
+        /// @brief convert count of seconds since 1900 into a readable and sortable string
+    Ztring& Date_From_Seconds_1900 (const int32u Seconds);
+        /// @brief convert count of seconds since 1900 into a readable and sortable string
+    Ztring& Date_From_Seconds_1900 (const int64s Seconds);
+        /// @brief convert count of seconds since 1904 into a readable and sortable string
+    Ztring& Date_From_Seconds_1904 (const int32u Seconds);
+        /// @brief convert count of seconds since 1904 into a readable and sortable string
     Ztring& Date_From_Seconds_1904 (const int64u Seconds);
+        /// @brief convert count of seconds since 1904 into a readable and sortable string
+    Ztring& Date_From_Seconds_1904 (const int64s Seconds);
         /// @brief convert count of seconds since 1970 into a readable and sortable string
     Ztring& Date_From_Seconds_1970 (const int32u Seconds);
+        /// @brief convert count of seconds since 1970 into a readable and sortable string
+    Ztring& Date_From_Seconds_1970 (const int32s Seconds);
+        /// @brief convert count of seconds since 1970 into a readable and sortable string
+    Ztring& Date_From_Seconds_1970 (const int64s Seconds);
         /// @brief convert count of seconds since 1970 into a readable and sortable string (in local time)
     Ztring& Date_From_Seconds_1970_Local (const int32u Seconds);
         /// @brief convert a free formated string into a readable and sortable string
@@ -270,36 +284,36 @@ public :
     float80     To_float80  (ztring_t Options=Ztring_Nothing) const;
 
     //Static versions
-    static Ztring ToZtring_From_Local(const std::string &S)                               {return Ztring().From_Local(S);};
-    static Ztring ToZtring_From_Local(const char  *S)                                     {return Ztring().From_Local(S);};
-    static Ztring ToZtring_From_Local(const char  *S, size_type Start,  size_type Length) {return Ztring().From_Local(S, Start, Length);};
-    static Ztring ToZtring_From_Local(const char  *S, size_type Length)                   {return Ztring().From_Local(S, Length);};
-    static Ztring ToZtring_From_CC4  (const char  *S)                                     {return Ztring().From_CC4(S);};
-    static Ztring ToZtring_From_CC4  (const int8u *S)                                     {return Ztring().From_CC4(S);};
-    static Ztring ToZtring_From_CC4  (const int32u S)                                     {return Ztring().From_CC4(S);};
-    static Ztring ToZtring_From_CC3  (const char  *S)                                     {return Ztring().From_CC3(S);};
-    static Ztring ToZtring_From_CC3  (const int8u *S)                                     {return Ztring().From_CC3(S);};
-    static Ztring ToZtring_From_CC3  (const int32u S)                                     {return Ztring().From_CC3(S);};
-    static Ztring ToZtring_From_CC2  (const char  *S)                                     {return Ztring().From_CC2(S);};
-    static Ztring ToZtring_From_CC2  (const int8u *S)                                     {return Ztring().From_CC2(S);};
-    static Ztring ToZtring_From_CC2  (const int16u S)                                     {return Ztring().From_CC2(S);};
-    static Ztring ToZtring_From_CC1  (const char  *S)                                     {return Ztring().From_CC1(S);};
-    static Ztring ToZtring_From_CC1  (const int8u *S)                                     {return Ztring().From_CC1(S);};
-    static Ztring ToZtring_From_CC1  (const int8u  S)                                     {return Ztring().From_CC1(S);};
-    static Ztring ToZtring  (const int8s    I, int8u Radix=10)                   {return Ztring().From_Number(I, Radix);};
-    static Ztring ToZtring  (const int8u    I, int8u Radix=10)                   {return Ztring().From_Number(I, Radix);};
-    static Ztring ToZtring  (const int16s   I, int8u Radix=10)                   {return Ztring().From_Number(I, Radix);};
-    static Ztring ToZtring  (const int16u   I, int8u Radix=10)                   {return Ztring().From_Number(I, Radix);};
-    static Ztring ToZtring  (const int32s   I, int8u Radix=10)                   {return Ztring().From_Number(I, Radix);};
-    static Ztring ToZtring  (const int32u   I, int8u Radix=10)                   {return Ztring().From_Number(I, Radix);};
-    static Ztring ToZtring  (const int64s   I, int8u Radix=10)                   {return Ztring().From_Number(I, Radix);};
-    static Ztring ToZtring  (const int64u   I, int8u Radix=10)                   {return Ztring().From_Number(I, Radix);};
-    static Ztring ToZtring  (const int128u  I, int8u Radix=10)                   {return Ztring().From_Number(I, Radix);};
-    static Ztring ToZtring  (const float32  F, int8u AfterComma=3)               {return Ztring().From_Number(F, AfterComma);};
-    static Ztring ToZtring  (const float64  F, int8u AfterComma=3)               {return Ztring().From_Number(F, AfterComma);};
-    static Ztring ToZtring  (const float80  F, int8u AfterComma=3)               {return Ztring().From_Number(F, AfterComma);};
+    static Ztring ToZtring_From_Local(const std::string &S)                               {return Ztring().From_Local(S);}
+    static Ztring ToZtring_From_Local(const char  *S)                                     {return Ztring().From_Local(S);}
+    static Ztring ToZtring_From_Local(const char  *S, size_type Start,  size_type Length) {return Ztring().From_Local(S, Start, Length);}
+    static Ztring ToZtring_From_Local(const char  *S, size_type Length)                   {return Ztring().From_Local(S, Length);}
+    static Ztring ToZtring_From_CC4  (const char  *S)                                     {return Ztring().From_CC4(S);}
+    static Ztring ToZtring_From_CC4  (const int8u *S)                                     {return Ztring().From_CC4(S);}
+    static Ztring ToZtring_From_CC4  (const int32u S)                                     {return Ztring().From_CC4(S);}
+    static Ztring ToZtring_From_CC3  (const char  *S)                                     {return Ztring().From_CC3(S);}
+    static Ztring ToZtring_From_CC3  (const int8u *S)                                     {return Ztring().From_CC3(S);}
+    static Ztring ToZtring_From_CC3  (const int32u S)                                     {return Ztring().From_CC3(S);}
+    static Ztring ToZtring_From_CC2  (const char  *S)                                     {return Ztring().From_CC2(S);}
+    static Ztring ToZtring_From_CC2  (const int8u *S)                                     {return Ztring().From_CC2(S);}
+    static Ztring ToZtring_From_CC2  (const int16u S)                                     {return Ztring().From_CC2(S);}
+    static Ztring ToZtring_From_CC1  (const char  *S)                                     {return Ztring().From_CC1(S);}
+    static Ztring ToZtring_From_CC1  (const int8u *S)                                     {return Ztring().From_CC1(S);}
+    static Ztring ToZtring_From_CC1  (const int8u  S)                                     {return Ztring().From_CC1(S);}
+    static Ztring ToZtring  (const int8s    I, int8u Radix=10)                   {return Ztring().From_Number(I, Radix);}
+    static Ztring ToZtring  (const int8u    I, int8u Radix=10)                   {return Ztring().From_Number(I, Radix);}
+    static Ztring ToZtring  (const int16s   I, int8u Radix=10)                   {return Ztring().From_Number(I, Radix);}
+    static Ztring ToZtring  (const int16u   I, int8u Radix=10)                   {return Ztring().From_Number(I, Radix);}
+    static Ztring ToZtring  (const int32s   I, int8u Radix=10)                   {return Ztring().From_Number(I, Radix);}
+    static Ztring ToZtring  (const int32u   I, int8u Radix=10)                   {return Ztring().From_Number(I, Radix);}
+    static Ztring ToZtring  (const int64s   I, int8u Radix=10)                   {return Ztring().From_Number(I, Radix);}
+    static Ztring ToZtring  (const int64u   I, int8u Radix=10)                   {return Ztring().From_Number(I, Radix);}
+    static Ztring ToZtring  (const int128u  I, int8u Radix=10)                   {return Ztring().From_Number(I, Radix);}
+    static Ztring ToZtring  (const float32  F, int8u AfterComma=3)               {return Ztring().From_Number(F, AfterComma);}
+    static Ztring ToZtring  (const float64  F, int8u AfterComma=3)               {return Ztring().From_Number(F, AfterComma);}
+    static Ztring ToZtring  (const float80  F, int8u AfterComma=3)               {return Ztring().From_Number(F, AfterComma);}
     #ifdef SIZE_T_IS_LONG
-    static Ztring ToZtring  (const size_t   I,  int8u Radix=10)                  {return Ztring().From_Number(I, Radix);};
+    static Ztring ToZtring  (const size_t   I,  int8u Radix=10)                  {return Ztring().From_Number(I, Radix);}
     #endif //SIZE_T_IS_LONG
 
     //Edition
@@ -328,7 +342,7 @@ public :
     Ztring SubString (const tstring &Begin, const tstring &End, size_type Pos=0, ztring_t Options=Ztring_Nothing) const;
         /// @brief replace a string by another one
         /// @param ToFind string to find
-        /// @param ToReplace string wich replace the string found
+        /// @param ReplaceBy string wich replace the string found
         /// @param Pos Position to begin to scan string
         /// @param Options Options for searching \n
         ///                Available : Ztring_CaseSensitive, Ztring_Recursive

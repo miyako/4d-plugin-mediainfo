@@ -28,7 +28,11 @@
 #include <exception>
 #include <cstdlib>
 #include <cstdio>
-#include <new>
+#ifdef __cplusplus
+    #include <new> //for size_t
+#else /* __cplusplus */
+    #include <stddef.h> //for size_t
+#endif /* __cplusplus */
 #include "ZenLib/Conf.h"
 
 namespace ZenLib
@@ -51,7 +55,7 @@ class int128 {
 
     public:
         // Constructors
-        inline int128 () throw () {};
+        inline int128 () throw () : lo(0), hi(0) {};
         inline int128 (const int128 & a) throw () : lo (a.lo), hi (a.hi) {};
 
         inline int128 (const unsigned int & a) throw () : lo (a), hi (0ll) {};
@@ -133,7 +137,7 @@ class int128 {
         bool    bit (unsigned int n) const throw ();
         void    bit (unsigned int n, bool val) throw ();
 }
-#ifdef __GNUC__
+#if defined(__GNUC__)  && !defined(__ANDROID_API__)
     __attribute__ ((__aligned__ (16), __packed__))
 #endif
 ;
@@ -149,36 +153,36 @@ bool operator && (const int128 & a, const int128 & b) throw ();
 // GLOBAL OPERATOR INLINES
 
 inline int128 operator + (const int128 & a, const int128 & b) throw () {
-    return int128 (a) += b; };
+    return int128 (a) += b; }
 inline int128 operator - (const int128 & a, const int128 & b) throw () {
-    return int128 (a) -= b; };
+    return int128 (a) -= b; }
 inline int128 operator * (const int128 & a, const int128 & b) throw () {
-    return int128 (a) *= b; };
+    return int128 (a) *= b; }
 inline int128 operator / (const int128 & a, const int128 & b) throw () {
-    return int128 (a) /= b; };
+    return int128 (a) /= b; }
 inline int128 operator % (const int128 & a, const int128 & b) throw () {
-    return int128 (a) %= b; };
+    return int128 (a) %= b; }
 
 inline int128 operator >> (const int128 & a, unsigned int n) throw () {
-    return int128 (a) >>= n; };
+    return int128 (a) >>= n; }
 inline int128 operator << (const int128 & a, unsigned int n) throw () {
-    return int128 (a) <<= n; };
+    return int128 (a) <<= n; }
 
 inline int128 operator & (const int128 & a, const int128 & b) throw () {
-    return int128 (a) &= b; };
+    return int128 (a) &= b; }
 inline int128 operator | (const int128 & a, const int128 & b) throw () {
-    return int128 (a) |= b; };
+    return int128 (a) |= b; }
 inline int128 operator ^ (const int128 & a, const int128 & b) throw () {
-    return int128 (a) ^= b; };
+    return int128 (a) ^= b; }
 
 inline bool operator >  (const int128 & a, const int128 & b) throw () {
-    return   b < a; };
+    return   b < a; }
 inline bool operator <= (const int128 & a, const int128 & b) throw () {
-    return !(b < a); };
+    return !(b < a); }
 inline bool operator >= (const int128 & a, const int128 & b) throw () {
-    return !(a < b); };
+    return !(a < b); }
 inline bool operator != (const int128 & a, const int128 & b) throw () {
-    return !(a == b); };
+    return !(a == b); }
 
 
 // MISC
