@@ -6,7 +6,7 @@
 4d-plugin-mediainfo
 ===================
 
-4D implementation of the [MediaInfo](https://mediaarea.net/ja/MediaInfo) program. (`22.03`)
+4D implementation of the [MediaInfo](https://github.com/MediaArea/MediaInfo) program. (`22.03`)
 
 ```4d
 info:=MediaInfo (data;type)
