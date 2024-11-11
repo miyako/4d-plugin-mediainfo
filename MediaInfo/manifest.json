@@ -6,6 +6,11 @@
             "theme": "MediaInfo",
             "syntax": "MediaInfo(&O;&L):T",
             "threadSafe": true
+        },
+        {
+            "theme": "MediaInfo",
+            "syntax": "MediaInfoFile(&T;&L):T",
+            "threadSafe": true
         }
     ]
 }

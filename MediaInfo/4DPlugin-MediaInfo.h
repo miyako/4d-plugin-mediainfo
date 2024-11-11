@@ -20,6 +20,30 @@
 #include "C_BLOB.h"
 #include "C_LONGINT.h"
 
+#if VERSIONMAC
+#define CPathString CUTF8String
+#define CPathOpen fopen
+#define CPathSeek fseek
+#define CPathTell ftell
+#define CPathAppend "ab"
+#define CPathCreate "wb"
+#define CPathRead "rb"
+#else
+#include <Shlobj.h>
+#define CPathString CUTF16String
+#define CPathOpen _wfopen
+#define CPathSeek _fseeki64
+#define CPathTell _ftelli64
+#define CPathAppend L"ab"
+#define CPathCreate L"wb"
+#define CPathRead L"rb"
+#include <fcntl.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <io.h>
+#include <stdio.h>
+#endif
+
 #define STREAM_BUFFER_SIZE 4096
 
 #define MediaInfo_Inform_HTML (1)
@@ -33,6 +57,7 @@
 
 #pragma mark -
 
-void MediaInfo(PA_PluginParameters params);
+static void MediaInfo(PA_PluginParameters params);
+static void MediaInfoFile(PA_PluginParameters params);
 
 #endif /* PLUGIN_MEDIAINFO_H */
