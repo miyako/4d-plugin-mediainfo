@@ -18,6 +18,17 @@ data|BLOB|classic `C_BLOB`, not `4D.Blob` object
 type|LONGINT|``MediaInfo Inform XML``, ``MediaInfo Inform CSV``, ``MediaInfo Inform HTML``, `MediaInfo Inform JSON`
 info|TEXT|
 
+```4d
+info:=MediaInfoFile (path;type)
+```
+
+Parameter|Type|Description
+------------|------------|----
+path|TEXT|
+type|LONGINT|``MediaInfo Inform XML``, ``MediaInfo Inform CSV``, ``MediaInfo Inform HTML``, `MediaInfo Inform JSON`
+info|TEXT|
+
+
 ## Examples
 
 ```4d
