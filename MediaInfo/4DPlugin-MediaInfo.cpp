@@ -144,118 +144,121 @@ static void MediaInfoFile(PA_PluginParameters params) {
     Param1.fromParamAtIndex(pParams, 1);
     Param2.fromParamAtIndex(pParams, 2);
     
-    FILE *f;
-    unsigned char *buf[STREAM_BUFFER_SIZE];
-    
+    if(Param1.getUTF16Length() != 0){
+        
+        FILE *f;
+        unsigned char *buf[STREAM_BUFFER_SIZE];
+        
 #if VERSIONMAC
-    CUTF8String u8;
-    Param1.copyPath(&u8);
-    const  char   *path = (const  char   *)u8.c_str();
+        CUTF8String u8;
+        Param1.copyPath(&u8);
+        const  char   *path = (const  char   *)u8.c_str();
 #else
-    const wchar_t *path = (const wchar_t *)Param1.getUTF16StringPtr();
+        const wchar_t *path = (const wchar_t *)Param1.getUTF16StringPtr();
 #endif
-    
-    MediaInfoLib::MediaInfo MI;
-    MI.Open_Buffer_Init();
-    
-    f = CPathOpen (path, CPathRead);
-    
-    if (f)
-    {
-        CPathSeek(f, 0L, SEEK_END);
-        PA_ulong64 size = (PA_ulong64)CPathTell(f);
         
-        size_t seek = 0L;
-        size_t len = 0L;
-        size_t pos = 0L;
-        time_t startTime = time(0);
-        size_t status = 0L;
+        MediaInfoLib::MediaInfo MI;
+        MI.Open_Buffer_Init();
         
-        do
+        f = CPathOpen (path, CPathRead);
+        
+        if (f)
         {
-            time_t now = time(0);
-            time_t elapsedTime = abs(startTime - now);
+            CPathSeek(f, 0L, SEEK_END);
+            PA_ulong64 size = (PA_ulong64)CPathTell(f);
             
-            if (elapsedTime > 0)
+            size_t seek = 0L;
+            size_t len = 0L;
+            size_t pos = 0L;
+            time_t startTime = time(0);
+            size_t status = 0L;
+            
+            do
             {
-                startTime = now;
-                PA_YieldAbsolute();
-            }
-            
-            CPathSeek(f, pos, SEEK_SET);
-            len = fread(buf, 1, STREAM_BUFFER_SIZE, f);
-            
-            if(len > 0)
-            {
-                status = MI.Open_Buffer_Continue((const ZenLib::int8u*)buf, len);
+                time_t now = time(0);
+                time_t elapsedTime = abs(startTime - now);
                 
-                if (status & 0x08)
+                if (elapsedTime > 0)
                 {
-                    len = 0;
-                    break;
+                    startTime = now;
+                    PA_YieldAbsolute();
                 }
                 
-                seek = MI.Open_Buffer_Continue_GoTo_Get();
+                CPathSeek(f, pos, SEEK_SET);
+                len = fread(buf, 1, STREAM_BUFFER_SIZE, f);
                 
-                if (seek != -1)
+                if(len > 0)
                 {
-                    pos = seek;
-                    continue;
+                    status = MI.Open_Buffer_Continue((const ZenLib::int8u*)buf, len);
+                    
+                    if (status & 0x08)
+                    {
+                        len = 0;
+                        break;
+                    }
+                    
+                    seek = MI.Open_Buffer_Continue_GoTo_Get();
+                    
+                    if (seek != -1)
+                    {
+                        pos = seek;
+                        continue;
+                    }
+                    
+                    pos += len;
                 }
-
-                pos += len;
+                
             }
+            while (len > 0);
             
+            fclose(f);
         }
-        while (len > 0);
         
-        fclose(f);
-    }
-    
-    MI.Open_Buffer_Finalize();
-    
-    switch (Param2.getIntValue()) {
-        case MediaInfo_Inform_XML:
-            MediaInfoLib::Config.Inform_Set(__T("XML"));
-            break;
-        case MediaInfo_Inform_HTML:
-            MediaInfoLib::Config.Inform_Set(__T("HTML"));
-            break;
-        case MediaInfo_Inform_CSV:
-            MediaInfoLib::Config.Inform_Set(__T("CSV"));
-            break;
-        case MediaInfo_Inform_JSON:
-            MediaInfoLib::Config.Inform_Set(__T("JSON"));
-            break;
-        default:
-            MediaInfoLib::Config.Inform_Set(__T(""));
-            break;
-    }
+        MI.Open_Buffer_Finalize();
         
-    std::wstring inform = std::wstring((const wchar_t *)MI.Inform().c_str());
-    
-    MI.Close();
-    
-    uint32_t len;
+        switch (Param2.getIntValue()) {
+            case MediaInfo_Inform_XML:
+                MediaInfoLib::Config.Inform_Set(__T("XML"));
+                break;
+            case MediaInfo_Inform_HTML:
+                MediaInfoLib::Config.Inform_Set(__T("HTML"));
+                break;
+            case MediaInfo_Inform_CSV:
+                MediaInfoLib::Config.Inform_Set(__T("CSV"));
+                break;
+            case MediaInfo_Inform_JSON:
+                MediaInfoLib::Config.Inform_Set(__T("JSON"));
+                break;
+            default:
+                MediaInfoLib::Config.Inform_Set(__T(""));
+                break;
+        }
+        
+        std::wstring inform = std::wstring((const wchar_t *)MI.Inform().c_str());
+        
+        MI.Close();
+        
+        uint32_t len;
 #if VERSIONMAC
         PA_4DCharSet eVTC_WCHAR_T = eVTC_UTF_32;
 #else
         PA_4DCharSet eVTC_WCHAR_T = eVTC_UTF_16;
 #endif
-
-    len = (uint32_t)(inform.size() * sizeof(wchar_t)) + sizeof(wchar_t);
-    vector<char> ubuf(len);
-
-    uint32_t ulen = PA_ConvertCharsetToCharset(
-                        (char *)inform.c_str(),
-                        inform.size() * sizeof(wchar_t),
-                        eVTC_WCHAR_T,
-                        (char *)&ubuf[0],
-                        len,
-                        eVTC_UTF_16
-                        );
-
-    returnValue.setUTF16String((const PA_Unichar *)&ubuf[0], ulen);
         
+        len = (uint32_t)(inform.size() * sizeof(wchar_t)) + sizeof(wchar_t);
+        vector<char> ubuf(len);
+        
+        uint32_t ulen = PA_ConvertCharsetToCharset(
+                                                   (char *)inform.c_str(),
+                                                   inform.size() * sizeof(wchar_t),
+                                                   eVTC_WCHAR_T,
+                                                   (char *)&ubuf[0],
+                                                   len,
+                                                   eVTC_UTF_16
+                                                   );
+        
+        returnValue.setUTF16String((const PA_Unichar *)&ubuf[0], ulen);
+    }
+    
     returnValue.setReturn(pResult);
 }
