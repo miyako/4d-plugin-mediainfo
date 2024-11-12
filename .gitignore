@@ -1,3 +1,4 @@
 MediaInfo/build/*
 MediaInfo/.vs/*
 MediaInfo/Objs/*
+MediaInfo/test/userPreferences.*

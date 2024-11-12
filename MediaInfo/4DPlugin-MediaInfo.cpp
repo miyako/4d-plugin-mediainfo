@@ -165,9 +165,11 @@ static void MediaInfoFile(PA_PluginParameters params) {
         CPathSeek(f, 0L, SEEK_END);
         PA_ulong64 size = (PA_ulong64)CPathTell(f);
         
+        size_t seek = 0L;
         size_t len = 0L;
         size_t pos = 0L;
         time_t startTime = time(0);
+        size_t status = 0L;
         
         do
         {
@@ -185,12 +187,23 @@ static void MediaInfoFile(PA_PluginParameters params) {
             
             if(len > 0)
             {
-                if ((MI.Open_Buffer_Continue((const ZenLib::int8u*)buf, len)))
+                status = MI.Open_Buffer_Continue((const ZenLib::int8u*)buf, len);
+                
+                if (status & 0x08)
                 {
-                    pos += len;
-                }else{
                     len = 0;
+                    break;
                 }
+                
+                seek = MI.Open_Buffer_Continue_GoTo_Get();
+                
+                if (seek != -1)
+                {
+                    pos = seek;
+                    continue;
+                }
+
+                pos += len;
             }
             
         }
