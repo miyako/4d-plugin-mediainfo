@@ -54,31 +54,50 @@ static void MediaInfo(PA_PluginParameters params) {
 
         MediaInfoLib::MediaInfo MI;
         MI.Open_Buffer_Init();
-        
-        size_t            size;
-        const uint8_t    *ptr;
-        
-        ptr        = Param1.getBytesPtr();
-        size    = STREAM_BUFFER_SIZE;
-        
+                
+        const uint8_t *ptr = Param1.getBytesPtr();
+        size_t seek = 0L;
+        size_t pos = 0L;
+        size_t size = STREAM_BUFFER_SIZE;
         time_t startTime = time(0);
+        size_t status = 0L;
         
         do
         {
             time_t now = time(0);
             time_t elapsedTime = abs(startTime - now);
+            
             if (elapsedTime > 0)
             {
                 startTime = now;
                 PA_YieldAbsolute();
             }
             
-            if (!(MI.Open_Buffer_Continue(ptr, size)))
+            pos += size;
+            status = MI.Open_Buffer_Continue(ptr, size);
+            
+            if (status & 0x08)
             {
-                ptr = Param1.getBytesPtrForSize((uint32_t *)&size);
-            }else{
                 size = 0;
+                break;
             }
+            
+            seek = MI.Open_Buffer_Continue_GoTo_Get();
+            
+            if (seek != -1)
+            {
+                size_t _size = seek - pos;
+                ptr = Param1.getBytesPtrForSize((uint32_t *)&_size);
+            }
+            
+            ptr = Param1.getBytesPtrForSize((uint32_t *)&size);
+            
+            if (ptr == NULL)
+            {
+                size = 0;
+                break;
+            }
+            
         }
         while (size > 0);
     
