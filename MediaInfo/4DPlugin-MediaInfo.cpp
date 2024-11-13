@@ -76,7 +76,7 @@ static void MediaInfo(PA_PluginParameters params) {
             pos += size;
             status = MI.Open_Buffer_Continue(ptr, size);
             
-            if (status & 0x08)
+            if ((status & 0x08) == 0x08) //Finalized
             {
                 size = 0;
                 break;
@@ -186,7 +186,7 @@ static void MediaInfoFile(PA_PluginParameters params) {
             CPathSeek(f, 0L, SEEK_END);
             PA_ulong64 size = (PA_ulong64)CPathTell(f);
             
-            size_t seek = 0L;
+            ZenLib::int64u seek = 0L;
             size_t len = 0L;
             size_t pos = 0L;
             time_t startTime = time(0);
@@ -203,14 +203,17 @@ static void MediaInfoFile(PA_PluginParameters params) {
                     PA_YieldAbsolute();
                 }
                 
-                CPathSeek(f, pos, SEEK_SET);
-                len = fread(buf, 1, STREAM_BUFFER_SIZE, f);
+                if(!CPathSeek(f, pos, SEEK_SET)){
+                    len = fread(buf, 1, STREAM_BUFFER_SIZE, f);
+                }else{
+                    len = 0;
+                }
                 
                 if(len > 0)
                 {
                     status = MI.Open_Buffer_Continue((const ZenLib::int8u*)buf, len);
                     
-                    if (status & 0x08)
+                    if ((status & 0x08) == 0x08) //Finalized
                     {
                         len = 0;
                         break;
