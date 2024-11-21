@@ -53,6 +53,8 @@ static void MediaInfo(PA_PluginParameters params) {
     if(Param1.getBytesLength() != 0){
 
         MediaInfoLib::MediaInfo MI;
+        MediaInfoLib::Config.Complete_Set(true);
+        
         MI.Open_Buffer_Init();
                 
         const uint8_t *ptr = Param1.getBytesPtr();
@@ -177,6 +179,8 @@ static void MediaInfoFile(PA_PluginParameters params) {
 #endif
         
         MediaInfoLib::MediaInfo MI;
+        MediaInfoLib::Config.Complete_Set(true);
+        
         MI.Open_Buffer_Init();
         
         f = CPathOpen (path, CPathRead);
@@ -255,7 +259,7 @@ static void MediaInfoFile(PA_PluginParameters params) {
                 MediaInfoLib::Config.Inform_Set(__T(""));
                 break;
         }
-        
+
         std::wstring inform = std::wstring((const wchar_t *)MI.Inform().c_str());
         
         MI.Close();
