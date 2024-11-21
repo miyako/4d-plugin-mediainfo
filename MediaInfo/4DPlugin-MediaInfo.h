@@ -50,6 +50,11 @@
 #define MediaInfo_Inform_CSV (2)
 #define MediaInfo_Inform_XML (3)
 #define MediaInfo_Inform_JSON (4)
+#define MediaInfo_Inform_OLDXML (5)
+#define MediaInfo_Inform_EBUCore (6)
+#define MediaInfo_Inform_PBCore (7)
+#define MediaInfo_Inform_PBCore2 (8)
+#define MediaInfo_Inform_EBUCore_JSON (9)
 
 #if VERSIONWIN
 #include <time.h>

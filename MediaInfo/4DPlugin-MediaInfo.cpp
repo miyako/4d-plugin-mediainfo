@@ -109,6 +109,18 @@ static void MediaInfo(PA_PluginParameters params) {
             case MediaInfo_Inform_XML:
                 MediaInfoLib::Config.Inform_Set(__T("XML"));
                 break;
+            case MediaInfo_Inform_OLDXML:
+                MediaInfoLib::Config.Inform_Set(__T("OLDXML"));
+                break;
+            case MediaInfo_Inform_EBUCore:
+                MediaInfoLib::Config.Inform_Set(__T("EBUCore"));
+                break;
+            case MediaInfo_Inform_PBCore:
+                MediaInfoLib::Config.Inform_Set(__T("PBCore"));
+                break;
+            case MediaInfo_Inform_PBCore2:
+                MediaInfoLib::Config.Inform_Set(__T("PBCore2"));
+                break;
             case MediaInfo_Inform_HTML:
                 MediaInfoLib::Config.Inform_Set(__T("HTML"));
                 break;
@@ -117,6 +129,9 @@ static void MediaInfo(PA_PluginParameters params) {
                 break;
             case MediaInfo_Inform_JSON:
                 MediaInfoLib::Config.Inform_Set(__T("JSON"));
+                break;
+            case MediaInfo_Inform_EBUCore_JSON:
+                MediaInfoLib::Config.Inform_Set(__T("EBUCore_JSON"));
                 break;
             default:
                 MediaInfoLib::Config.Inform_Set(__T(""));
@@ -246,6 +261,18 @@ static void MediaInfoFile(PA_PluginParameters params) {
             case MediaInfo_Inform_XML:
                 MediaInfoLib::Config.Inform_Set(__T("XML"));
                 break;
+            case MediaInfo_Inform_OLDXML:
+                MediaInfoLib::Config.Inform_Set(__T("OLDXML"));
+                break;
+            case MediaInfo_Inform_EBUCore:
+                MediaInfoLib::Config.Inform_Set(__T("EBUCore"));
+                break;
+            case MediaInfo_Inform_PBCore:
+                MediaInfoLib::Config.Inform_Set(__T("PBCore"));
+                break;
+            case MediaInfo_Inform_PBCore2:
+                MediaInfoLib::Config.Inform_Set(__T("PBCore2"));
+                break;
             case MediaInfo_Inform_HTML:
                 MediaInfoLib::Config.Inform_Set(__T("HTML"));
                 break;
@@ -254,6 +281,9 @@ static void MediaInfoFile(PA_PluginParameters params) {
                 break;
             case MediaInfo_Inform_JSON:
                 MediaInfoLib::Config.Inform_Set(__T("JSON"));
+                break;
+            case MediaInfo_Inform_EBUCore_JSON:
+                MediaInfoLib::Config.Inform_Set(__T("EBUCore_JSON"));
                 break;
             default:
                 MediaInfoLib::Config.Inform_Set(__T(""));
