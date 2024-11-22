@@ -82,28 +82,30 @@ static void MediaInfo(PA_PluginParameters params) {
             
             if ((status & 0x01) == 0x01) //Accepted
             {
-//                        printf("Accepted\r");
+                        printf("Accepted\r");
             }
             
             if ((status & 0x02) == 0x02) //Filled
             {
-//                        printf("Filled\r");
+                        printf("Filled\r");
             }
             
             if ((status & 0x04) == 0x04) //Updated
             {
-//                        printf("Updated\r");
+                        printf("Updated\r");
             }
             
             if ((status & 0x08) == 0x08) //Finalized
             {
-//                        printf("Finalized\r");
+                        printf("Finalized\r");
                 size = 0;
                 break;
             }
             
             seek = MI.Open_Buffer_Continue_GoTo_Get();
             
+            printf("seek:%d\r", seek);
+
             if (seek != (MediaInfo_int64u)-1)
             {
                 MI.Open_Buffer_Init(size, seek);

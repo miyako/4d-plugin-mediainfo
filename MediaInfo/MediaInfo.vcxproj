@@ -161,7 +161,7 @@
       <ModuleDefinitionFile>.\4D Plugin API\4DPluginAPI.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>zlib.lib;MediaInfo-Static.lib;ZenLib.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>charset.lib;iconv.lib;unistring.lib;brotlienc.lib;brotlicommon.lib;idn2.lib;brotlidec.lib;Crypt32.lib;Wldap32.lib;cares.lib;libssl.lib;libcrypto.lib;zlibd.lib;libssh2.lib;nghttp2.lib;zstd.lib;libpgport.lib;libpgcommon.lib;libpgtypes.lib;libpq.lib;libecpg_compat.lib;libecpg.lib;lz4d.lib;libcurl-d.lib;tinyxml2.lib;zlib.lib;MediaInfod.lib;Zend.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(ProjectDir)lib\windows64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -211,7 +211,7 @@
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <AdditionalDependencies>zlib.lib;MediaInfo-Static.lib;ZenLib.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>charset.lib;iconv.lib;unistring.lib;brotlienc.lib;brotlicommon.lib;idn2.lib;brotlidec.lib;Crypt32.lib;Wldap32.lib;cares.lib;libssl.lib;libcrypto.lib;zlib.lib;libssh2.lib;nghttp2.lib;zstd.lib;libpgport.lib;libpgcommon.lib;libpgtypes.lib;libpq.lib;libecpg_compat.lib;libecpg.lib;lz4.lib;libcurl.lib;tinyxml2.lib;MediaInfo.lib;Zen.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(ProjectDir)lib\windows64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
