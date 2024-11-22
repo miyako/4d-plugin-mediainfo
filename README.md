@@ -8,6 +8,8 @@
 
 4D implementation of the [MediaInfo](https://github.com/MediaArea/MediaInfo) program. (`22.03`)
 
+(`24.06`) for windows
+
 ```4d
 info:=MediaInfo (data;type)
 ```
@@ -41,3 +43,4 @@ $info:=MediaInfo ($data;MediaInfo Inform HTML)
 $info:=MediaInfo ($data;MediaInfo Inform JSON)
 ```
 
+**Note**: `2.2.0` added More formats. see [constants.xlf](https://raw.githubusercontent.com/miyako/4d-plugin-mediainfo/refs/heads/master/MediaInfo/constants.xlf)
