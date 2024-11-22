@@ -41,3 +41,4 @@ $info:=MediaInfo ($data;MediaInfo Inform HTML)
 $info:=MediaInfo ($data;MediaInfo Inform JSON)
 ```
 
+**Note**: `2.2.0` added More formats. see [constants.xlf](https://raw.githubusercontent.com/miyako/4d-plugin-mediainfo/refs/heads/master/MediaInfo/constants.xlf)
