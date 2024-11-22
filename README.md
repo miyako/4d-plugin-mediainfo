@@ -8,9 +8,6 @@
 
 4D implementation of the [MediaInfo](https://github.com/MediaArea/MediaInfo) program. 
 
-Windows: `24.06` 
-macOS: `24.11`
-
 ```4d
 info:=MediaInfo (data;type)
 ```
