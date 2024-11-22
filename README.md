@@ -6,9 +6,10 @@
 4d-plugin-mediainfo
 ===================
 
-4D implementation of the [MediaInfo](https://github.com/MediaArea/MediaInfo) program. (`22.03`)
+4D implementation of the [MediaInfo](https://github.com/MediaArea/MediaInfo) program. 
 
-(`24.06`) for windows
+Windows: `24.06` 
+macOS: `24.11`
 
 ```4d
 info:=MediaInfo (data;type)
