@@ -50,12 +50,14 @@ static void MediaInfo(PA_PluginParameters params) {
     Param1.fromParamAtIndex(pParams, 1);
     Param2.fromParamAtIndex(pParams, 2);
 
-    if(Param1.getBytesLength() != 0){
+    PA_ulong64 dataSize = (PA_ulong64)Param1.getBytesLength();
+    
+    if(dataSize != 0){
 
         MediaInfoLib::MediaInfo MI;
         MediaInfoLib::Config.Complete_Set(true);
         
-        MI.Open_Buffer_Init();
+        MI.Open_Buffer_Init(dataSize, 0);
                 
         const uint8_t *ptr = Param1.getBytesPtr();
         size_t seek = 0L;
@@ -78,21 +80,38 @@ static void MediaInfo(PA_PluginParameters params) {
             pos += size;
             status = MI.Open_Buffer_Continue(ptr, size);
             
+            if ((status & 0x01) == 0x01) //Accepted
+            {
+//                        printf("Accepted\r");
+            }
+            
+            if ((status & 0x02) == 0x02) //Filled
+            {
+//                        printf("Filled\r");
+            }
+            
+            if ((status & 0x04) == 0x04) //Updated
+            {
+//                        printf("Updated\r");
+            }
+            
             if ((status & 0x08) == 0x08) //Finalized
             {
+//                        printf("Finalized\r");
                 size = 0;
                 break;
             }
             
             seek = MI.Open_Buffer_Continue_GoTo_Get();
             
-            if (seek != -1)
+            if (seek != (MediaInfo_int64u)-1)
             {
+                MI.Open_Buffer_Init(size, seek);
                 size_t _size = seek - pos;
                 ptr = Param1.getBytesPtrForSize((uint32_t *)&_size);
+            }else{
+                ptr = Param1.getBytesPtrForSize((uint32_t *)&size);
             }
-            
-            ptr = Param1.getBytesPtrForSize((uint32_t *)&size);
             
             if (ptr == NULL)
             {
@@ -195,15 +214,15 @@ static void MediaInfoFile(PA_PluginParameters params) {
         
         MediaInfoLib::MediaInfo MI;
         MediaInfoLib::Config.Complete_Set(true);
-        
-        MI.Open_Buffer_Init();
-        
+
         f = CPathOpen (path, CPathRead);
         
         if (f)
         {
             CPathSeek(f, 0L, SEEK_END);
             PA_ulong64 size = (PA_ulong64)CPathTell(f);
+            
+            MI.Open_Buffer_Init(size, 0);
             
             ZenLib::int64u seek = 0L;
             size_t len = 0L;
@@ -231,18 +250,35 @@ static void MediaInfoFile(PA_PluginParameters params) {
                 if(len > 0)
                 {
                     status = MI.Open_Buffer_Continue((const ZenLib::int8u*)buf, len);
+
+                    if ((status & 0x01) == 0x01) //Accepted
+                    {
+//                        printf("Accepted\r");
+                    }
+                    
+                    if ((status & 0x02) == 0x02) //Filled
+                    {
+//                        printf("Filled\r");
+                    }
+                    
+                    if ((status & 0x04) == 0x04) //Updated
+                    {
+//                        printf("Updated\r");
+                    }
                     
                     if ((status & 0x08) == 0x08) //Finalized
                     {
+//                        printf("Finalized\r");
                         len = 0;
                         break;
                     }
                     
                     seek = MI.Open_Buffer_Continue_GoTo_Get();
                     
-                    if (seek != -1)
+                    if (seek != (MediaInfo_int64u)-1)
                     {
                         pos = seek;
+                        MI.Open_Buffer_Init(size, seek);
                         continue;
                     }
                     
