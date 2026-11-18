@@ -69,7 +69,7 @@ static void MediaInfo(PA_PluginParameters params) {
         do
         {
             time_t now = time(0);
-            time_t elapsedTime = abs(startTime - now);
+            time_t elapsedTime = now - startTime;
             
             if (elapsedTime > 0)
             {
@@ -80,31 +80,16 @@ static void MediaInfo(PA_PluginParameters params) {
             pos += size;
             status = MI.Open_Buffer_Continue(ptr, size);
             
-            if ((status & 0x01) == 0x01) //Accepted
-            {
-                        printf("Accepted\r");
-            }
             
-            if ((status & 0x02) == 0x02) //Filled
-            {
-                        printf("Filled\r");
-            }
             
-            if ((status & 0x04) == 0x04) //Updated
-            {
-                        printf("Updated\r");
-            }
             
             if ((status & 0x08) == 0x08) //Finalized
             {
-                        printf("Finalized\r");
                 size = 0;
                 break;
             }
             
             seek = MI.Open_Buffer_Continue_GoTo_Get();
-            
-            printf("seek:%d\r", seek);
 
             if (seek != (MediaInfo_int64u)-1)
             {
@@ -183,7 +168,7 @@ static void MediaInfo(PA_PluginParameters params) {
                             eVTC_UTF_16
                             );
 
-        returnValue.setUTF16String((const PA_Unichar *)&buf[0], ulen);
+        returnValue.setUTF16String((const PA_Unichar *)&buf[0], ulen / sizeof(PA_Unichar));
     }
 
     returnValue.setReturn(pResult);
@@ -204,7 +189,7 @@ static void MediaInfoFile(PA_PluginParameters params) {
     if(Param1.getUTF16Length() != 0){
         
         FILE *f;
-        unsigned char *buf[STREAM_BUFFER_SIZE];
+        unsigned char buf[STREAM_BUFFER_SIZE];
         
 #if VERSIONMAC
         CUTF8String u8;
@@ -235,7 +220,7 @@ static void MediaInfoFile(PA_PluginParameters params) {
             do
             {
                 time_t now = time(0);
-                time_t elapsedTime = abs(startTime - now);
+                time_t elapsedTime = now - startTime;
                 
                 if (elapsedTime > 0)
                 {
@@ -351,7 +336,7 @@ static void MediaInfoFile(PA_PluginParameters params) {
                                                    eVTC_UTF_16
                                                    );
         
-        returnValue.setUTF16String((const PA_Unichar *)&ubuf[0], ulen);
+        returnValue.setUTF16String((const PA_Unichar *)&ubuf[0], ulen / sizeof(PA_Unichar));
     }
     
     returnValue.setReturn(pResult);
