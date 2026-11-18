@@ -1,4 +1,8 @@
-MediaInfo/build/*
-MediaInfo/.vs/*
-MediaInfo/Objs/*
-MediaInfo/test/userPreferences.*
+.DS_Store
+build/
+.vs/
+*.4dbase/Logs/
+test/Data/Logs/
+test/userPreferences.*/
+test/Plugins/MediaInfo.bundle/Contents/MacOS/MediaInfo
+test/Plugins/MediaInfo.bundle/Contents/_CodeSignature/
